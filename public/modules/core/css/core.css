@@ -1,3 +1,6 @@
+.navbar a {
+	color: #777;
+}
 .content {
 	margin-top: 50px;
 }
@@ -16,4 +19,12 @@
 .form-group.required .control-label:after {
 	content: " *";
 	color: red;
+}
+.banner-image-container {
+	height: 470px;
+	width: 100%;
+	position: relative;
+	margin-bottom: 50px;
+	background: url("../img/brand/banner-home-desktop.jpg") center bottom no-repeat;
+	background-size: cover;
 }
