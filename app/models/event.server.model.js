@@ -48,10 +48,10 @@ var EventSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	startTime: {
+	startDate: {
 		type: Date
 	},
-	endTime: {
+	endDate: {
 		type: Date
 	},
 	location: {

@@ -2,65 +2,79 @@
 
 // Events controller
 angular.module('events').controller('EventsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Events',
-	function($scope, $stateParams, $location, Authentication, Events) {
-		$scope.authentication = Authentication;
+    function($scope, $stateParams, $location, Authentication, Events) {
+        $scope.authentication = Authentication;
 
-		// Create new Event
-		$scope.create = function() {
-			// Create new Event object
-			var event = new Events ({
-				name: this.name
-			});
+        $scope.startDate = new Date();
+        $scope.endDate = new Date($scope.startDate);
+        $scope.endDate.setDate($scope.startDate.getDate() + 1);
 
-			// Redirect after save
-			event.$save(function(response) {
-				$location.path('events/' + response._id);
+        $scope.toggleMin = function() {
+            $scope.minDate = $scope.minDate ? null : new Date();
+        };
+        $scope.toggleMin();
 
-				// Clear form fields
-				$scope.name = '';
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-			});
-		};
+        // Create new Event
+        $scope.create = function() {
+            // Create new Event object
+            var event = new Events({
+                name: this.name,
+                startDate: this.startDate,
+                endDate: this.endDate,
+                location: this.location,
+                user: this.authentication.user._id,
+                description: this.description
+            });
 
-		// Remove existing Event
-		$scope.remove = function(event) {
-			if ( event ) { 
-				event.$remove();
+            // Redirect after save
+            event.$save(function(response) {
+                $location.path('events/' + response._id);
 
-				for (var i in $scope.events) {
-					if ($scope.events [i] === event) {
-						$scope.events.splice(i, 1);
-					}
-				}
-			} else {
-				$scope.event.$remove(function() {
-					$location.path('events');
-				});
-			}
-		};
+                // Clear form fields
+                $scope.name = '';
+            }, function(errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+        };
 
-		// Update existing Event
-		$scope.update = function() {
-			var event = $scope.event;
+        // Remove existing Event
+        $scope.remove = function(event) {
+            if(event) {
+                event.$remove();
 
-			event.$update(function() {
-				$location.path('events/' + event._id);
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-			});
-		};
+                for(var i in $scope.events) {
+                    if($scope.events[i] === event) {
+                        $scope.events.splice(i, 1);
+                    }
+                }
+            } else {
+                $scope.event.$remove(function() {
+                    $location.path('events');
+                });
+            }
+        };
 
-		// Find a list of Events
-		$scope.find = function() {
-			$scope.events = Events.query();
-		};
+        // Update existing Event
+        $scope.update = function() {
+            var event = $scope.event;
 
-		// Find existing Event
-		$scope.findOne = function() {
-			$scope.event = Events.get({ 
-				eventId: $stateParams.eventId
-			});
-		};
-	}
+            event.$update(function() {
+                $location.path('events/' + event._id);
+            }, function(errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+        };
+
+        // Find a list of Events
+        $scope.find = function() {
+            $scope.events = Events.query();
+        };
+
+        // Find existing Event
+        $scope.findOne = function() {
+            $scope.event = Events.get({
+                eventId: $stateParams.eventId
+            });
+        };
+    }
 ]);
