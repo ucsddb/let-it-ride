@@ -1,4 +1,4 @@
-## Let It Ride
+## Let It Ride [![Build Status](https://travis-ci.org/ucsddb/let-it-ride.svg?branch=master)](https://travis-ci.org/ucsddb/let-it-ride)
 letitride is an application that simplifies ride organization and logistics. 
 
 ## Prerequisites
