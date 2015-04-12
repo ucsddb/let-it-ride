@@ -11,10 +11,10 @@ Make sure you have installed all these prerequisites on your development machine
 $ npm install -g bower
 ```
 
-* Grunt - You're going to use the [Grunt Task Runner](http://gruntjs.com/) to automate your development process, in order to install it make sure you've installed Node.js and npm, then install grunt globally using npm:
+* Gulp - You're going to use the [Gulp Build System](http://gulpjs.com/) to automate your development process, in order to install it make sure you've installed Node.js and npm, then install gulp globally using npm:
 
 ```
-$ sudo npm install -g grunt-cli
+$ sudo npm install -g gulp
 ```
 
 ## Quick Install
@@ -32,10 +32,10 @@ This command does a few things:
 * Finally, when the install process is over, npm will initiate a bower install command to install all the front-end modules needed for the application
 
 ## Run the application
-After the install process is over, you'll be able to run the application using Grunt, just run grunt default task:
+After the install process is over, you'll be able to run the application using gulp, just run gulp default task:
 
 ```
-$ grunt
+$ gulp
 ```
 
 Your application should run on the 3000 port so in your browser just go to [http://localhost:3000](http://localhost:3000)
