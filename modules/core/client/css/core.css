@@ -49,6 +49,9 @@
     width: 100%;
     position: relative;
     margin-bottom: 50px;
-    background: url("../img/brand/banner-home-desktop.jpg") center bottom no-repeat;
+    background-image: url("/modules/core/img/brand/banner-home-desktop.jpg");
+    background-repeat: no-repeat;
+    background-attachment: right;
+    background-position: top;
     background-size: cover;
 }
