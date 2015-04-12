@@ -4,6 +4,9 @@
 npm-debug.log
 node_modules/
 public/lib
+public/dist
 app/tests/coverage/
 .bower-*/
 .idea/
+uploads
+modules/users/client/img/profie/uploads

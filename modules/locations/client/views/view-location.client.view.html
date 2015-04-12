@@ -1,0 +1,27 @@
+<section data-ng-controller="LocationsController" data-ng-init="findOne()">
+    <div class="page-header">
+        <h1 data-ng-bind="location.name"></h1>
+    </div>
+    <div class="pull-right" data-ng-show="(authentication.user)">
+        <a class="btn btn-primary" href="/#!/locations/{{location._id}}/edit">
+            <i class="glyphicon glyphicon-edit"></i>
+        </a>
+        <a class="btn btn-primary" data-ng-click="remove();">
+            <i class="glyphicon glyphicon-trash"></i>
+        </a>
+    </div>
+    <div>
+        Address: <span data-ng-bind="location.address"></span>
+    </div>
+    <div>
+        Long/Lat: <span data-ng-bind="location.geometry"></span>
+    </div>
+    <div>
+        <small>
+            <em class="text-muted">
+                Posted on
+                <span data-ng-bind="location.created | date:'mediumDate'"></span>
+            </em>
+        </small>
+    </div>
+</section>
