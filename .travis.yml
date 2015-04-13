@@ -1,7 +1,10 @@
 language: node_js
 node_js:
-  - "0.10"
+- '0.10'
 env:
-  - NODE_ENV=travis
+- NODE_ENV=travis
 services:
-  - mongodb
+- mongodb
+deploy:
+  api_key:
+    secure: I8nAAkfVgdVmC7OLxGM5c3RvheM7TpDEOPymrl1uiE+j6VtY2TRAAdQrL3yl8eNctkIterAWYIdMfPHiekrapvDSLiJiaI2EL3XSNItTnVKL8717hjQ4heSyhNrj+8LShC0Lt0nMNfHSHrTAPcE9ZafuobZAL1q9KUPkyaeiM5Y=
