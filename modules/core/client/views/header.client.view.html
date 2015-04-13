@@ -1,6 +1,6 @@
-<div class="container" data-ng-controller="HeaderController">
+<div class="container" data-ng-controller="HeaderController as header">
     <div class="navbar-header">
-        <button class="navbar-toggle" type="button" data-ng-click="toggleCollapsibleMenu()">
+        <button class="navbar-toggle" type="button" data-ng-click="header.toggleCollapsibleMenu()">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -8,11 +8,11 @@
         </button>
         <a data-ui-sref="home" class="navbar-brand">let-it-ride</a>
     </div>
-    <nav class="collapse navbar-collapse" collapse="!isCollapsed" role="navigation">
-        <ul class="nav navbar-nav" data-ng-if="menu.shouldRender(authentication.user);">
-            <li data-ng-repeat="item in menu.items | orderBy: 'position'" 
-                data-ng-if="item.shouldRender(authentication.user);" 
-                ng-switch="item.type" data-ng-class="{active: $state.includes(item.state)}" 
+    <nav class="collapse navbar-collapse" collapse="!header.isCollapsed" role="navigation">
+        <ul class="nav navbar-nav" data-ng-if="header.menu.shouldRender(header.authentication.user);">
+            <li data-ng-repeat="item in header.menu.items | orderBy: 'position'" 
+                data-ng-if="item.shouldRender(header.authentication.user);" 
+                ng-switch="item.type" data-ng-class="{active: header.$state.includes(item.state)}" 
                 class="{{item.class}}" dropdown="item.type === 'dropdown'">
                 <a ng-switch-when="dropdown" class="dropdown-toggle" dropdown-toggle>
                     <span data-ng-bind="item.title"></span>
@@ -20,14 +20,14 @@
                 </a>
                 <ul ng-switch-when="dropdown" class="dropdown-menu">
                     <li data-ng-repeat="subitem in item.items | orderBy: 'position'" 
-                        data-ng-if="subitem.shouldRender(authentication.user);" data-ui-sref-active="active">
+                        data-ng-if="subitem.shouldRender(header.authentication.user);" data-ui-sref-active="active">
                         <a data-ui-sref="{{subitem.state}}" data-ng-bind="subitem.title"></a>
                     </li>
                 </ul>
                 <a ng-switch-default data-ui-sref="{{item.state}}" data-ng-bind="item.title"></a>
             </li>
         </ul>
-        <ul class="nav navbar-nav navbar-right" data-ng-hide="authentication.user">
+        <ul class="nav navbar-nav navbar-right" data-ng-hide="header.authentication.user">
             <li data-ui-sref-active="active">
                 <a data-ui-sref="authentication.signup" target="_self">Sign Up</a>
             </li>
@@ -36,12 +36,12 @@
                 <a data-ui-sref="authentication.signin" target="_self">Sign In</a>
             </li>
         </ul>
-        <ul class="nav navbar-nav navbar-right" data-ng-show="authentication.user">
+        <ul class="nav navbar-nav navbar-right" data-ng-show="header.authentication.user">
             <li class="dropdown" dropdown>
                 <a href="#" class="dropdown-toggle user-header-dropdown-toggle" data-toggle="dropdown" dropdown-toggle>
-                    <img data-ng-src="{{authentication.user.profileImageURL}}" 
-                        alt="{{authentication.user.displayName}}" class="header-profile-image"/>
-                    <span data-ng-bind="authentication.user.displayName"></span> <b class="caret"></b>
+                    <img data-ng-src="{{header.authentication.user.profileImageURL}}" 
+                        alt="{{header.authentication.user.displayName}}" class="header-profile-image"/>
+                    <span data-ng-bind="header.authentication.user.displayName"></span> <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
                     <li data-ui-sref-active="active">
@@ -50,7 +50,7 @@
                     <li data-ui-sref-active="active">
                         <a data-ui-sref="settings.picture">Change Profile Picture</a>
                     </li>
-                    <li data-ui-sref-active="active" data-ng-show="authentication.user.provider === 'local'">
+                    <li data-ui-sref-active="active" data-ng-show="header.authentication.user.provider === 'local'">
                         <a data-ui-sref="settings.password">Change Password</a>
                     </li>
                     <li data-ui-sref-active="active">
