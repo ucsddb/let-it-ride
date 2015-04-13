@@ -62,6 +62,10 @@ var UserSchema = new Schema({
     salt: {
         type: String
     },
+    defaultLocation: {
+        type: Schema.ObjectId,
+        ref: 'Location'
+    },
     profileImageURL: {
         type: String,
         default: 'modules/users/img/profile/default.png'
