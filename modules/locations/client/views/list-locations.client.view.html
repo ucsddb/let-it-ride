@@ -2,13 +2,23 @@
     <div class="page-header">
         <h1>Locations</h1>
     </div>
+    <div>
+        <ui-gmap-google-map bounds="map.bounds" center="map.center" zoom="map.zoom">
+            <ui-gmap-markers models="map.locationMarkers" coords="'self'" icon="'icon'" options="'options'" click="'onClick'">
+                <ui-gmap-windows show="show">
+                    <div ng-non-bindable>{{address}}</div>
+                </ui-gmap-window>
+            </ui-gmap-markers>
+        </ui-gmap-google-map>
+    </div>
     <div class="list-group">
         <a data-ng-repeat="location in locations" data-ui-sref="locations.view({locationId: location._id})" class="list-group-item">
             <small class="list-group-item-text">
                 Posted on <span data-ng-bind="location.created | date:'medium'"></span>
+                <span data-ng-bind="location._id"></span>
             </small>
             <h4 class="list-group-item-heading" data-ng-bind="location.address"></h4>
-            <!-- <h3 class="list-group-item" data-ng-bind="location.geo"></h3> -->
+            <!-- <h3 class="list-group-item" data-ng-bind="location._id"></h3> -->
         </a>
     </div>
     <div class="alert alert-warning text-center" data-ng-if="locations.$resolved && !locations.length">

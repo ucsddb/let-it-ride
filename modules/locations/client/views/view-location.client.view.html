@@ -11,6 +11,12 @@
         </a>
     </div>
     <div>
+        <ui-gmap-google-map center="map.center" zoom="map.zoom">
+            <ui-gmap-markers models="map.locationMarkers" coords="'self'" icon="'icon'">
+            </ui-gmap-markers>
+        </ui-gmap-google-map>
+    </div>
+    <div>
         Address: <span data-ng-bind="location.address"></span>
     </div>
     <div>

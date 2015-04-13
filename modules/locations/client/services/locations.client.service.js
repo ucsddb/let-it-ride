@@ -1,8 +1,14 @@
-'use strict';
+(function() {
+    'use strict';
 
-//Locations service used to communicate Locations REST endpoints
-angular.module('locations').factory('Locations', ['$resource',
-    function($resource) {
+    //Locations service used to communicate Locations REST endpoints
+    angular
+        .module('locations')
+        .factory('Locations', Locations);
+
+    Locations.$inject = ['$resource'];
+
+    function Locations($resource) {
         return $resource('api/locations/:locationId', {
             locationId: '@_id'
         }, {
@@ -11,4 +17,4 @@ angular.module('locations').factory('Locations', ['$resource',
             }
         });
     }
-]);
+})();

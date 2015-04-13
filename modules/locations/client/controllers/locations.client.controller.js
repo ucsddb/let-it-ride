@@ -1,8 +1,14 @@
-'use strict';
+(function() {
+    'use strict';
 
-// Locations controller
-angular.module('locations').controller('LocationsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Locations',
-    function($scope, $stateParams, $location, Authentication, Locations) {
+    // Locations controller
+    angular
+        .module('locations')
+        .controller('LocationsController', LocationsController);
+
+    LocationsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Locations', 'LocationUtilProvider'];
+
+    function LocationsController($scope, $stateParams, $location, Authentication, Locations, LocationUtilProvider) {
         $scope.authentication = Authentication;
 
         // Create new Location
@@ -54,6 +60,17 @@ angular.module('locations').controller('LocationsController', ['$scope', '$state
         // Find a list of Locations
         $scope.find = function() {
             $scope.locations = Locations.query();
+            $scope.map = {
+                zoom: 14,
+                locationMarkers: []
+            };
+            $scope.locations.$promise.then(function() {
+                LocationUtilProvider.then(function(LocationUtil) {
+                    $scope.map.bounds = LocationUtil.getBounds($scope.locations);
+                    $scope.map.center = LocationUtil.getCenter($scope.locations);
+                    $scope.map.locationMarkers = LocationUtil.makeMarkers($scope.locations);
+                });
+            });
         };
 
         // Find existing Location
@@ -61,6 +78,16 @@ angular.module('locations').controller('LocationsController', ['$scope', '$state
             $scope.location = Locations.get({
                 locationId: $stateParams.locationId
             });
+            $scope.map = {
+                zoom: 15,
+                locationMarkers: []
+            };
+            $scope.location.$promise.then(function() {
+                LocationUtilProvider.then(function(LocationUtil) {
+                    $scope.map.center = LocationUtil.getCenter([$scope.location]);
+                    $scope.map.locationMarkers = LocationUtil.makeMarkers([$scope.location]);
+                });
+            });
         };
     }
-]);
+})();
