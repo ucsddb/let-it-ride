@@ -1,9 +1,15 @@
-'use strict';
+(function() {
+    'use strict';
 
-// Configuring the Locations module
-angular.module('locations').run(['Menus',
-    function(Menus) {
-        // Add the articles dropdown item
+    // Configuring the Locations module
+    angular
+        .module('locations')
+        .run(runBlock);
+
+    runBlock.$inject = ['Menus'];
+
+    function runBlock(Menus) {
+        // Add the locations dropdown item
         Menus.addMenuItem('topbar', {
             title: 'Locations',
             state: 'locations',
@@ -23,4 +29,4 @@ angular.module('locations').run(['Menus',
             state: 'locations.create'
         });
     }
-]);
+})();

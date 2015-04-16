@@ -1,9 +1,12 @@
-'use strict';
+(function() {
+    'use strict';
 
-//Menu service used for managing  menus
-angular.module('core').service('Menus', [
+    //Menu service used for managing  menus
+    angular
+        .module('core')
+        .service('Menus', Menus);
 
-    function() {
+    function Menus() {
         // Define a set of default roles
         this.defaultRoles = ['*'];
 
@@ -12,13 +15,13 @@ angular.module('core').service('Menus', [
 
         // A private function for rendering decision 
         var shouldRender = function(user) {
-            if (user) {
-                if (!!~this.roles.indexOf('*')) {
+            if(user) {
+                if(!!~this.roles.indexOf('*')) {
                     return true;
                 } else {
-                    for (var userRoleIndex in user.roles) {
-                        for (var roleIndex in this.roles) {
-                            if (this.roles[roleIndex] === user.roles[userRoleIndex]) {
+                    for(var userRoleIndex in user.roles) {
+                        for(var roleIndex in this.roles) {
+                            if(this.roles[roleIndex] === user.roles[userRoleIndex]) {
                                 return true;
                             }
                         }
@@ -33,8 +36,8 @@ angular.module('core').service('Menus', [
 
         // Validate menu existance
         this.validateMenuExistance = function(menuId) {
-            if (menuId && menuId.length) {
-                if (this.menus[menuId]) {
+            if(menuId && menuId.length) {
+                if(this.menus[menuId]) {
                     return true;
                 } else {
                     throw new Error('Menu does not exists');
@@ -101,9 +104,9 @@ angular.module('core').service('Menus', [
             });
 
             // Add submenu items
-            if (options.items) {
-                for (var i in options.items) {
-                	this.addSubMenuItem(menuId, options.link, options.items[i]);
+            if(options.items) {
+                for(var i in options.items) {
+                    this.addSubMenuItem(menuId, options.link, options.items[i]);
                 }
             }
 
@@ -119,12 +122,12 @@ angular.module('core').service('Menus', [
             this.validateMenuExistance(menuId);
 
             // Search for menu item
-            for (var itemIndex in this.menus[menuId].items) {
-                if (this.menus[menuId].items[itemIndex].state === parentItemState) {
+            for(var itemIndex in this.menus[menuId].items) {
+                if(this.menus[menuId].items[itemIndex].state === parentItemState) {
                     // Push new submenu item
                     this.menus[menuId].items[itemIndex].items.push({
                         title: options.title || '',
-                        state: options.state|| '',
+                        state: options.state || '',
                         isPublic: ((options.isPublic === null || typeof options.isPublic === 'undefined') ? this.menus[menuId].items[itemIndex].isPublic : options.isPublic),
                         roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.menus[menuId].items[itemIndex].roles : options.roles),
                         position: options.position || 0,
@@ -143,8 +146,8 @@ angular.module('core').service('Menus', [
             this.validateMenuExistance(menuId);
 
             // Search for menu item to remove
-            for (var itemIndex in this.menus[menuId].items) {
-                if (this.menus[menuId].items[itemIndex].link === menuItemURL) {
+            for(var itemIndex in this.menus[menuId].items) {
+                if(this.menus[menuId].items[itemIndex].link === menuItemURL) {
                     this.menus[menuId].items.splice(itemIndex, 1);
                 }
             }
@@ -159,9 +162,9 @@ angular.module('core').service('Menus', [
             this.validateMenuExistance(menuId);
 
             // Search for menu item to remove
-            for (var itemIndex in this.menus[menuId].items) {
-                for (var subitemIndex in this.menus[menuId].items[itemIndex].items) {
-                    if (this.menus[menuId].items[itemIndex].items[subitemIndex].link === submenuItemURL) {
+            for(var itemIndex in this.menus[menuId].items) {
+                for(var subitemIndex in this.menus[menuId].items[itemIndex].items) {
+                    if(this.menus[menuId].items[itemIndex].items[subitemIndex].link === submenuItemURL) {
                         this.menus[menuId].items[itemIndex].items.splice(subitemIndex, 1);
                     }
                 }
@@ -176,4 +179,4 @@ angular.module('core').service('Menus', [
             isPublic: false
         });
     }
-]);
+})();

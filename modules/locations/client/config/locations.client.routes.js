@@ -1,8 +1,14 @@
-'use strict';
+(function() {
+    'use strict';
 
-//Setting up route
-angular.module('locations').config(['$stateProvider',
-    function($stateProvider) {
+    //Setting up route
+    angular
+        .module('locations')
+        .config(configure);
+
+    configure.$inject = ['$stateProvider'];
+
+    function configure($stateProvider) {
         // Locations state routing
         $stateProvider.
         state('locations', {
@@ -27,4 +33,4 @@ angular.module('locations').config(['$stateProvider',
             templateUrl: 'modules/locations/views/edit-location.client.view.html'
         });
     }
-]);
+})();
