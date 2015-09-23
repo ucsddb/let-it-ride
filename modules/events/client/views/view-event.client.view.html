@@ -1,0 +1,50 @@
+<section data-ng-controller="EventsController" data-ng-init="findOne()">
+    <div class="page-header">
+        <h1 data-ng-bind="event.name"></h1>
+    </div>
+
+    <h2>Location</h2>
+    <div style="width: 500px">
+        <ui-gmap-google-map center="map.center" zoom="map.zoom">
+            <ui-gmap-markers models="map.locationMarkers" coords="'self'" icon="'icon'">
+            </ui-gmap-markers>
+        </ui-gmap-google-map>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Attending</th>
+                <th>Driving</th>
+                <th>Name</th>
+                <th>Address</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="row in testUsers">
+            <td>
+                <input type="checkbox" ng-model="row"/>
+            </td>
+            <td></td>
+            <td>{{row.displayName}}</td>
+            <td>{{row.defaultLocation.address}}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="pull-right" data-ng-show="(authentication.user)">
+        <a class="btn btn-primary" href="/#!/events/{{event._id}}/edit">
+            <i class="glyphicon glyphicon-edit"></i>
+        </a>
+        <a class="btn btn-primary" data-ng-click="remove();">
+            <i class="glyphicon glyphicon-trash"></i>
+        </a>
+    </div>
+    <div>
+        <small>
+            <em class="text-muted">
+                Posted on
+                <span data-ng-bind="event.created | date:'mediumDate'"></span>
+            </em>
+        </small>
+    </div>
+</section>

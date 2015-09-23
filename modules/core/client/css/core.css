@@ -45,11 +45,11 @@
 }
 
 .banner-image-container {
-    height: 470px;
+    height: 530px;
     width: 100%;
     position: relative;
     margin-bottom: 50px;
-    background-image: url("/modules/core/img/brand/banner-home-desktop.jpg");
+    background-image: url("/modules/core/img/brand/banner.jpg");
     background-repeat: no-repeat;
     background-attachment: right;
     background-position: top;

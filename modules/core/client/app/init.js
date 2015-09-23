@@ -27,6 +27,11 @@
         });
     }
 
+    angular
+        .module(ApplicationConfiguration.applicationModuleName)
+        .constant('_', window._)
+        .constant('Papa', window.Papa);
+
     //Then define the init function for starting up the application
     angular.element(document).ready(function() {
         //Fixing facebook bug with redirect

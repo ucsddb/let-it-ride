@@ -1,12 +1,27 @@
 <section data-ng-controller="HomeController as home">
-    <div class="banner-image-container"></div>
+    <!-- <div class="banner-image-container"></div> -->
     <div class="container">
-        <div class="jumbotron text-center">
-            <div class="row">
-                <p class="lead">
-                    Let It Ride!
-                </p>
-            </div>
+        <div class="row">
+            <h1>Enter Data Here</h1>
+            <textarea ng-model="text" rows="20" cols="150"></textarea>
         </div>
+        <div class="row">
+            <button class="btn btn-success btn-large" ng-click="genRides()">Generate Rides</button>
+        </div>
+        <div class="list-group">
+        <div class="row" ng-if="drivers">
+            <h2>Drivers</h2>
+        </div>
+        <a data-ng-repeat="person in drivers" class="list-group-item">
+            <small class="list-group-item-text">
+                <span data-ng-bind="person.name"></span>
+            </small>
+            <h4 class="list-group-item-heading" data-ng-bind="person.address"></h4>
+        </a>
+
+        <div class="row" ng-if="result">
+            <pre ng-bind="result | json"></pre>
+        </div>
+    </div>
     </div>
 </section>
