@@ -14,7 +14,6 @@
   },
   "scripts": {
     "start": "gulp",
-    // "test": "gulp test",
     "postinstall": "bower install --config.interactive=false && gulp build"
   },
   "dependencies": {
