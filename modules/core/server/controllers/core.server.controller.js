@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Render the main applicaion page
+ * Render the main Application page
  */
 exports.renderIndex = function(req, res) {
 	res.render('modules/core/server/views/index', {
