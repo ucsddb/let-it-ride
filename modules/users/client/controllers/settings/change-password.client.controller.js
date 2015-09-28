@@ -1,7 +1,13 @@
-'use strict';
+(function() {
+    'use strict';
 
-angular.module('users').controller('ChangePasswordController', ['$scope', '$http', '$location', 'Users', 'Authentication',
-    function($scope, $http, $location, Users, Authentication) {
+    angular
+        .module('users')
+        .controller('ChangePasswordController', ChangePasswordController);
+
+    ChangePasswordController.$iject = ['$scope', '$http', '$location', 'Users', 'Authentication'];
+
+    function ChangePasswordController($scope, $http, $location, Users, Authentication) {
         $scope.user = Authentication.user;
 
         // Change user password
@@ -17,4 +23,4 @@ angular.module('users').controller('ChangePasswordController', ['$scope', '$http
             });
         };
     }
-]);
+})();

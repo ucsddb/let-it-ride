@@ -1,7 +1,13 @@
-'use strict';
+(function() {
+    'use strict';
 
-angular.module('users').controller('SocialAccountsController', ['$scope', '$http', '$location', 'Users', 'Authentication',
-    function($scope, $http, $location, Users, Authentication) {
+    angular
+        .module('users')
+        .controller('SocialAccountsController', SocialAccountsController);
+
+    SocialAccountsController.$inject = ['$scope', '$http', '$location', 'Users', 'Authentication'];
+
+    function SocialAccountsController($scope, $http, $location, Users, Authentication) {
         $scope.user = Authentication.user;
 
         // Check if there are additional accounts
@@ -35,4 +41,4 @@ angular.module('users').controller('SocialAccountsController', ['$scope', '$http
             });
         };
     }
-]);
+})();

@@ -1,7 +1,13 @@
-'use strict';
+(function() {
+    'use strict';
 
-angular.module('users').controller('ChangeProfilePictureController', ['$scope', '$timeout', '$window', 'Authentication', 'FileUploader',
-    function($scope, $timeout, $window, Authentication, FileUploader) {
+    angular
+        .module('users')
+        .controller('ChangeProfilePictureController', ChangeProfilePictureController);
+
+    ChangeProfilePictureController.$inject = ['$scope', '$timeout', '$window', 'Authentication', 'FileUploader'];
+
+    function ChangeProfilePictureController($scope, $timeout, $window, Authentication, FileUploader) {
         $scope.user = Authentication.user;
         $scope.imageURL = $scope.user.profileImageURL;
 
@@ -69,4 +75,4 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
             $scope.imageURL = $scope.user.profileImageURL;
         };
     }
-]);
+})();

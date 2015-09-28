@@ -1,8 +1,14 @@
-'use strict';
+(function() {
+    'use strict';
 
-// Config HTTP Error Handling
-angular.module('users').config(['$httpProvider',
-    function($httpProvider) {
+    // Config HTTP Error Handling
+    angular
+        .module('users')
+        .config(configure);
+
+    configure.$inject = ['$httpProvider'];
+
+    function configure($httpProvider) {
         // Set the httpProvider "not authorized" interceptor
         $httpProvider.interceptors.push(['$q', '$location', 'Authentication',
             function($q, $location, Authentication) {
@@ -27,4 +33,4 @@ angular.module('users').config(['$httpProvider',
             }
         ]);
     }
-]);
+})();
