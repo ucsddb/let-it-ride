@@ -1,0 +1,18 @@
+<section data-ng-controller="MembersController" data-ng-init="find()">
+    <div class="page-header">
+        <h1>Members</h1>
+    </div>
+    <div class="list-group">
+        <a data-ng-repeat="member in members" data-ui-sref="members.view({memberId: member._id})" class="list-group-item">
+            <small class="list-group-item-text">
+                Posted on <span data-ng-bind="member.created | date:'medium'"></span>
+                <span data-ng-bind="member._id"></span>
+            </small>
+            <h4 class="list-group-item-heading" data-ng-bind="member.address"></h4>
+            <!-- <h3 class="list-group-item" data-ng-bind="member._id"></h3> -->
+        </a>
+    </div>
+    <div class="alert alert-warning text-center" data-ng-if="members.$resolved && !members.length">
+        No Members yet, why don't you <a data-ui-sref="members.create">create one</a>?
+    </div>
+</section>
