@@ -14,7 +14,8 @@
             title: 'Events',
             state: 'events',
             roles: ['admin'],
-            type: 'dropdown'
+            type: 'dropdown',
+            isPublic: false
         });
 
         // Add the dropdown list item
