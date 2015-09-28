@@ -44,16 +44,15 @@
     color: red;
 }
 
-.banner-image-container {
-    height: 530px;
+img.banner-image-container {
+    min-height: 100%;
+    min-width: 1024px;
     width: 100%;
+    height: auto;
     position: relative;
+    top: 0;
+    left: 0;
     margin-bottom: 50px;
-    background-image: url("/modules/core/img/brand/banner.jpg");
-    background-repeat: no-repeat;
-    background-attachment: right;
-    background-position: top;
-    background-size: cover;
 }
 
 .angular-google-map-container { height: 400px; }
