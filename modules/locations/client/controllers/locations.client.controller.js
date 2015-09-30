@@ -61,7 +61,7 @@
         $scope.find = function() {
             $scope.locations = Locations.query();
             $scope.map = {
-                zoom: 14,
+                zoom: 1,
                 locationMarkers: []
             };
             $scope.locations.$promise.then(function() {
@@ -69,6 +69,7 @@
                     $scope.map.bounds = LocationUtil.getBounds($scope.locations);
                     $scope.map.center = LocationUtil.getCenter($scope.locations);
                     $scope.map.locationMarkers = LocationUtil.makeMarkers($scope.locations);
+                    $scope.map.zoom = LocationUtil.getZoomByBounds($scope.map.bounds);
                 });
             });
         };

@@ -15,10 +15,12 @@ var LocationSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    geometry: {
-        type: [Number],
-        default: [0, 0],
-        index: '2dsphere'
+    location: {
+        type: {
+            type: String,
+            default: 'Point'
+        },
+        coordinates: [Number]
     },
     address: {
         type: String,
@@ -28,14 +30,14 @@ var LocationSchema = new Schema({
     }
 });
 
-// LocationSchema.index({geometry: '2dsphere'});
+LocationSchema.index({location: '2dsphere'});
 
 LocationSchema.pre('save', function(next) {
     if(this.address) {
         var _this = this;
         geocoder.geocode(this.address, function(err, data) {
             _this.address = data.results[0].formatted_address;
-            _this.geometry = [data.results[0].geometry.location.lng, data.results[0].geometry.location.lat];
+            _this.location.coordinates = [data.results[0].geometry.location.lng, data.results[0].geometry.location.lat];
             next(err);
         });
     }
