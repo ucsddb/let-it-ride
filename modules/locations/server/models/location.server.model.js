@@ -40,6 +40,8 @@ LocationSchema.pre('save', function(next) {
             _this.location.coordinates = [data.results[0].geometry.location.lng, data.results[0].geometry.location.lat];
             next(err);
         });
+    } else {
+        next();
     }
 });
 
