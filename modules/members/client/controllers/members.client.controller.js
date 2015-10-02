@@ -6,24 +6,41 @@
         .module('members')
         .controller('MembersController', MembersController);
 
-    MembersController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Members'];
+    MembersController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Members', 'Papa', '_', '$q'];
 
-    function MembersController($scope, $stateParams, $location, Authentication, Members) {
+    function MembersController($scope, $stateParams, $location, Authentication, Members, Papa, _, $q) {
         $scope.authentication = Authentication;
 
         // Create new Member
         $scope.create = function() {
-            // Create new Member object
-            var member = new Members({
-                address: this.address
+            $scope.error = null;
+            var header = 'name,address,driver\n',
+                cleanedData = $scope.data.replace(/\s*,\s*/g, ',');
+
+            var parseObj = Papa.parse(header + cleanedData, {
+                header: true,
+                fastMode: false,
+                newline: '\n',
+                delimiter: ','
             });
 
-            // Redirect after save
-            member.$save(function(response) {
-                $location.path('members/' + response._id);
+            if(parseObj.errors.length) {
+                console.log('Error parsing member data');
+                $scope.error = _.pluck(parseObj.errors, 'message').join(', ');
+                return;
+            } 
 
-                // Clear form fields
-                $scope.address = '';
+            // Create new Members
+            var members = parseObj.data.map(function(memberData) {
+                memberData.driver = memberData.driver.toLowerCase() === 'yes';
+                return new Members(memberData);
+            });
+            
+            $q.all(members.map(function(member) {
+                return member.$save();
+            })).then(function(results) {
+                // Redirect after save
+                $location.path('members');
             }, function(errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
