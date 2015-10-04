@@ -5,7 +5,6 @@ module.exports = {
         lib: {
             css: [
                 'public/lib/bootstrap/dist/css/bootstrap.min.css',
-                'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
                 'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.css',
                 'public/lib/angular-ui-grid/ui-grid.min.css',
                 'public/lib/angular-ui-select/dist/select.min.css'
