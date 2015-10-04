@@ -4,8 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    geocoder = require('geocoder');
+    Schema = mongoose.Schema;
 
 /**
  * Location Schema
@@ -27,22 +26,14 @@ var LocationSchema = new Schema({
         default: '',
         required: 'Please enter an address',
         trim: true
+    },
+    nickname: {
+        type: String,
+        default: '',
+        trim: true
     }
 });
 
 LocationSchema.index({location: '2dsphere'});
-
-LocationSchema.pre('save', function(next) {
-    if(this.address) {
-        var _this = this;
-        geocoder.geocode(this.address, function(err, data) {
-            _this.address = data.results[0].formatted_address;
-            _this.location.coordinates = [data.results[0].geometry.location.lng, data.results[0].geometry.location.lat];
-            next(err);
-        });
-    } else {
-        next();
-    }
-});
 
 mongoose.model('Location', LocationSchema);

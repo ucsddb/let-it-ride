@@ -14,6 +14,10 @@
         }, {
             update: {
                 method: 'PUT'
+            },
+            saveAll: {
+                method: 'POST',
+                isArray: true
             }
         });
     }

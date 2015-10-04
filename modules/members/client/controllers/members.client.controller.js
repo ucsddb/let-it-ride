@@ -6,16 +6,17 @@
         .module('members')
         .controller('MembersController', MembersController);
 
-    MembersController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Members', 'Papa', '_', '$q'];
+    MembersController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Members', 'Papa', '_'];
 
-    function MembersController($scope, $stateParams, $location, Authentication, Members, Papa, _, $q) {
+    function MembersController($scope, $stateParams, $location, Authentication, Members, Papa, _) {
         $scope.authentication = Authentication;
 
         // Create new Member
         $scope.create = function() {
             $scope.error = null;
-            var header = 'name,address,driver\n',
-                cleanedData = $scope.data.replace(/\s*,\s*/g, ',');
+            var header = 'name,pickupLocation,dropoffLocation,driver\n',
+                cleanedData = $scope.data.replace(/\s*,\s*/g, ','),
+                sortedData;
 
             var parseObj = Papa.parse(header + cleanedData, {
                 header: true,
@@ -29,16 +30,12 @@
                 $scope.error = _.pluck(parseObj.errors, 'message').join(', ');
                 return;
             } 
-
-            // Create new Members
-            var members = parseObj.data.map(function(memberData) {
+            
+            parseObj.data.forEach(function(memberData) {
                 memberData.driver = memberData.driver.toLowerCase() === 'yes';
-                return new Members(memberData);
             });
             
-            $q.all(members.map(function(member) {
-                return member.$save();
-            })).then(function(results) {
+            Members.saveAll(parseObj.data, function(results) {
                 // Redirect after save
                 $location.path('members');
             }, function(errorResponse) {

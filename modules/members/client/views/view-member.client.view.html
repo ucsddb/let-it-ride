@@ -11,7 +11,10 @@
         </a>
     </div>
     <div>
-        Address: <span data-ng-bind="member.address"></span>
+        Pickup: <span data-ng-bind="member.pickupLocation.address"></span>
+    </div>
+    <div>
+        Dropoff: <span data-ng-bind="member.dropoffLocation.address"></span>
     </div>
     <div>
         Driver: <span data-ng-bind="member.driver | yes_no"></span>
