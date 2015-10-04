@@ -4,7 +4,7 @@
     // Events service used to communicate Events REST endpoints
     angular
         .module('events')
-        .factory('Events', Events)
+        .factory('Events', Events);
 
     Events.$inject = ['$resource'];
 
