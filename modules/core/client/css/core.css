@@ -56,3 +56,7 @@ img.banner-image-container {
 }
 
 .angular-google-map-container { height: 400px; }
+
+.show-grid {
+    margin-bottom: 15px;
+}

@@ -4,9 +4,9 @@
 var ApplicationConfiguration = (function() {
     // Init module configuration options
     var applicationModuleName = 'let-it-ride';
-    var applicationModuleVendorDependencies = ['ngResource', 'ui.router', 'ui.bootstrap',
-         'ui.bootstrap.datetimepicker', 'ui.utils', 'uiGmapgoogle-maps', 'ui.grid',
-         'ui.select', 'ngSanitize'
+    var applicationModuleVendorDependencies = ['ngResource', 'ngSanitize', 'ngAnimate', 'ui.router', 'ui.bootstrap',
+         'ui.bootstrap.datetimepicker', 'ui.utils', 'uiGmapgoogle-maps', 'ui.grid', 'ui.grid.selection',
+         'ui.grid.edit', 'ui.select'
     ];
 
     return {
