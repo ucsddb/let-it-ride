@@ -14,9 +14,6 @@ module.exports = function(app) {
         .put(events.update)
         .delete(events.delete);
 
-    app.route('/api/rides')
-        .post(events.rides);
-
     // Finish by binding the Event middleware
     app.param('eventId', events.eventByID);
 };
