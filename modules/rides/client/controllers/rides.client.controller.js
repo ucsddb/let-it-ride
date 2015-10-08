@@ -23,7 +23,7 @@
                 enableCellEdit: true,
                 cellTooltip: true
             }, {
-                name: 'Destination',
+                name: 'Dropoff Location',
                 field: 'dropoffLocation.address',
                 enableCellEdit: true,
                 cellTooltip: true
@@ -92,20 +92,88 @@
             });
         };
 
-        // Create new Ride
+        // Create new Rides
         $scope.create = function() {
-            // Create new Ride object
-            var ride = new Rides({
-                data: $scope.gridOptions.data
-            });
-            ride.$save().then(function(response) {
-                // $location.path('rides/' + r);
+            $scope.error = '';
+            if(_.isEmpty($scope.address)) {
+                $scope.error = 'Please provide a destination.';
+                return;
+            }
+            $scope.showResults = true;
 
-                // Clear form fields
-                $scope.name = '';
+            var dataForTo = massageData($scope.gridOptions.data, DIRECTION.TO),
+                dataForFrom = massageData($scope.gridOptions.data, DIRECTION.FROM);
+
+            // Create new Ride object
+            var ride1 = new Rides({
+                people: dataForTo,
+                destination: $scope.address.selected
+            });
+            var ride2 = new Rides({
+                people: dataForFrom,
+                destination: $scope.address.selected
+            });
+            ride1.$save().then(function(response) {
+                var solutions = _.get(response, 'problem.solutions.solution');
+                var routes = _.get(_.min(solutions, function(sol) {
+                    return sol.cost;
+                }), 'routes.route', []);
+                $scope.toResults = _.map(routes, function(r) {
+                    return {
+                        driver: r.vehicleId,
+                        passengers: _(r.act).pluck('shipmentId').uniq().value()
+                    };
+                });
             }, function(errorResponse) {
-                $scope.error = errorResponse.data.message;
+                $scope.error = 'To event: ' + errorResponse.data.message;
+            });
+            ride2.$save().then(function(response) {
+                var solutions = _.get(response, 'problem.solutions.solution');
+                var routes = _.get(_.min(solutions, function(sol) {
+                    return sol.cost;
+                }), 'routes.route', []);
+                $scope.fromResults = _.map(routes, function(r) {
+                    return {
+                        driver: r.vehicleId,
+                        passengers: _(r.act).pluck('shipmentId').uniq().value()
+                    };
+                });
+            }, function(errorResponse) {
+                $scope.error = 'From event: ' + errorResponse.data.message;
             });
         };
+
+        function massageData(people, direction) {
+            people = _.cloneDeep(people);
+            _.each(people, function(person) {
+                if(DIRECTION.TO === direction) {
+                    person.start = {
+                        longitude: _.get(person, 'pickupLocation.location.coordinates[0]'),
+                        latitude: _.get(person, 'pickupLocation.location.coordinates[1]'),
+                    };
+                    person.end = {
+                        longitude: _.get($scope.address, 'selected.geometry.location.lng'),
+                        latitude: _.get($scope.address, 'selected.geometry.location.lat'),
+                    };
+                } else if(DIRECTION.FROM === direction) {
+                    person.start = {
+                        longitude: _.get($scope.address, 'selected.geometry.location.lng'),
+                        latitude: _.get($scope.address, 'selected.geometry.location.lat'),
+                    };
+                    person.end = {
+                        longitude: _.get(person, 'dropoffLocation.location.coordinates[0]'),
+                        latitude: _.get(person, 'dropoffLocation.location.coordinates[1]'),
+                    };
+                }
+                delete person.dropoffLocation;
+                delete person.pickupLocation;
+            });
+            return people;
+        }
     }
+
+    var DIRECTION = {
+        TO: 0,
+        FROM: 1
+    };
 })();
