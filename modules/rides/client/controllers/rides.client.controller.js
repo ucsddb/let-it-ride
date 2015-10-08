@@ -4,11 +4,74 @@
     // Rides controller
     angular
         .module('rides')
-        .controller('RidesController', RidesController);
+        .controller('RidesController', RidesController)
+        .controller('EditModalInstanceCtrl', EditModalInstanceCtrl);
 
-    RidesController.$inject = ['$scope', '$location', 'Rides', 'Locations', 'Members', 'LocationUtilProvider', '$http', 'uiGridConstants', '_'];
+    RidesController.$inject = ['$scope', '$location', 'Rides', 'Locations', 'Members', 'LocationUtilProvider', '$http', '$modal', 'uiGridConstants', '_'];
+    EditModalInstanceCtrl.$inject = ['$scope', '$modalInstance', '$http'];
 
-    function RidesController($scope, $location, Rides, Locations, Members, LocationUtilProvider, $http, uiGridConstants, _) {
+    function refreshAddresses($scope, $http) {
+        return function(address) {
+            var params = {
+                address: address,
+                sensor: false
+            };
+            return $http.get(
+                'http://maps.googleapis.com/maps/api/geocode/json', {
+                    params: params
+                }
+            ).then(function(response) {
+                $scope.addresses = response.data.results;
+            });
+        };
+    }
+
+    function EditModalInstanceCtrl($scope, $modalInstance, $http) {
+        $scope.overrides = {
+            pickup: {},
+            dropoff: {},
+        };
+        $scope.ok = function() {
+            $modalInstance.close($scope.overrides);
+        };
+
+        $scope.cancel = function() {
+            $modalInstance.dismiss('cancel');
+        };
+        $scope.refreshAddresses = refreshAddresses($scope, $http);
+    }
+
+    function RidesController($scope, $location, Rides, Locations, Members, LocationUtilProvider, $http, $modal, uiGridConstants, _) {
+        $scope.editSelected = function() {
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'myModalContent.html',
+                controller: 'EditModalInstanceCtrl'
+            });
+
+            modalInstance.result.then(function(overrides) {
+                $scope.gridApi.selection.getSelectedRows().forEach(function(row) {
+                    if(overrides.pickup.selected) {
+                        row.pickupLocation = {
+                            address: overrides.pickup.selected.formatted_address,
+                            location: {
+                                coordinates: [overrides.pickup.selected.geometry.location.lng, overrides.pickup.selected.geometry.location.lat]
+                            }
+                        };
+                    }
+                    if(overrides.dropoff.selected) {
+                        row.dropoffLocation = {
+                            address: overrides.dropoff.selected.formatted_address,
+                            location: {
+                                coordinates: [overrides.dropoff.selected.geometry.location.lng, overrides.dropoff.selected.geometry.location.lat]
+                            }
+                        };
+                    }
+                });
+            }, function() {
+                console.log('Modal dismissed at: ' + new Date());
+            });
+        };
         $scope.gridOptions = {
             enableFiltering: true,
             showColumnFooter: true,
@@ -20,12 +83,10 @@
             }, {
                 name: 'Pickup Location',
                 field: 'pickupLocation.address',
-                enableCellEdit: true,
                 cellTooltip: true
             }, {
                 name: 'Dropoff Location',
                 field: 'dropoffLocation.address',
-                enableCellEdit: true,
                 cellTooltip: true
             }, {
                 name: 'Can Drive',
@@ -78,19 +139,7 @@
         };
 
         $scope.address = {};
-        $scope.refreshAddresses = function(address) {
-            var params = {
-                address: address,
-                sensor: false
-            };
-            return $http.get(
-                'http://maps.googleapis.com/maps/api/geocode/json', {
-                    params: params
-                }
-            ).then(function(response) {
-                $scope.addresses = response.data.results;
-            });
-        };
+        $scope.refreshAddresses = refreshAddresses($scope, $http);
 
         // Create new Rides
         $scope.create = function() {
