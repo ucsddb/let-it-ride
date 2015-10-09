@@ -49,10 +49,34 @@
             <strong data-ng-show="error" class="text-danger" data-ng-bind="error"></strong>
         </div>
         <div class="row show-grid" data-ng-show="showResults">
-            To Event:
-            <pre data-ng-bind="toResults | json"></pre>
-            From Event:
-            <pre data-ng-bind="fromResults | json"></pre>
+            <h2>To Event:</h2>
+            <div ng-repeat="route in toResults">
+                <div class="col-md-4">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{route.driver}}</h3>
+                        </div>
+                        <ul class="list-group" ng-repeat="passenger in route.passengers">
+                            <li class="list-group-item">{{passenger}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row show-grid" data-ng-show="showResults">
+            <h2>From Event:</h2>
+            <div ng-repeat="route in fromResults">
+                <div class="col-md-4">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{route.driver}}</h3>
+                        </div>
+                        <ul class="list-group" ng-repeat="passenger in route.passengers">
+                            <li class="list-group-item">{{passenger}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

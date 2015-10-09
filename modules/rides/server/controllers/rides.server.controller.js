@@ -46,13 +46,14 @@ exports.generate = function(req, res) {
             console.log('DONE, Reading ' + outputFile);
 
             fs.readFile(outputFile, function(err, data) {
-                util.inspect(arguments, {depth: 4, colors: true});
                 if(err) {
                     return res.status(500).send({
                         message: errorHandler.getErrorMessage(err)
                     });
                 }
-                res.json(JSON.parse(parser.toJson(data)));
+                res.json(parser.toJson(data, {
+                    object: true,
+                }));
             });
         });
 
