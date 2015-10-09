@@ -17,7 +17,7 @@
                 sensor: false
             };
             return $http.get(
-                'http://maps.googleapis.com/maps/api/geocode/json', {
+                'https://maps.googleapis.com/maps/api/geocode/json', {
                     params: params
                 }
             ).then(function(response) {
