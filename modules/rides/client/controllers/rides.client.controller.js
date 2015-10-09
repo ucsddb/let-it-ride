@@ -78,16 +78,18 @@
             data: Members.query(),
             columnDefs: [{
                 name: 'name',
-                enableCellEdit: true,
+                enableCellEdit: false,
                 aggregationType: uiGridConstants.aggregationTypes.count
             }, {
                 name: 'Pickup Location',
                 field: 'pickupLocation.address',
-                cellTooltip: true
+                cellTooltip: true,
+                enableCellEdit: false,
             }, {
                 name: 'Dropoff Location',
                 field: 'dropoffLocation.address',
-                cellTooltip: true
+                cellTooltip: true,
+                enableCellEdit: false,
             }, {
                 name: 'Can Drive',
                 field: 'driver',
