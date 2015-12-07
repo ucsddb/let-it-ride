@@ -65,6 +65,10 @@ module.exports = function(io, socket) {
                         });
                     }
                     io.emit('rideMessage', {
+                        id: message.id,
+                        progress: 1
+                    });
+                    io.emit('rideMessage', {
                         result: parser.toJson(data, {
                             object: true,
                         }),
