@@ -6,7 +6,9 @@
 var acl = require('acl');
 
 // Using the memory backend
+/* jshint ignore:start */
 acl = new acl(new acl.memoryBackend());
+/* jshint ignore:end */
 
 /**
  * Invoke Locations Permissions

@@ -143,6 +143,10 @@
         $scope.address = {};
         $scope.refreshAddresses = refreshAddresses($scope, $http);
 
+        var DIRECTION = {
+            TO: 0,
+            FROM: 1
+        };
         // Create new Rides
         $scope.create = function() {
             $scope.error = '';
@@ -222,9 +226,4 @@
             return people;
         }
     }
-
-    var DIRECTION = {
-        TO: 0,
-        FROM: 1
-    };
 })();
