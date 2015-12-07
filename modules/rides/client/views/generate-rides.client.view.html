@@ -50,6 +50,7 @@
         </div>
         <div class="row show-grid" data-ng-show="showResults">
             <h2>To Event:</h2>
+            <uib-progressbar class="progress-striped active" value="progress.to" type="success">{{progress.to}}%</uib-progressbar>
             <div ng-repeat="route in toResults">
                 <div class="col-md-4">
                     <div class="panel panel-success">
@@ -65,6 +66,7 @@
         </div>
         <div class="row show-grid" data-ng-show="showResults">
             <h2>From Event:</h2>
+            <uib-progressbar class="progress-striped active" value="progress.from" type="success">{{progress.from}}%</uib-progressbar>
             <div ng-repeat="route in fromResults">
                 <div class="col-md-4">
                     <div class="panel panel-success">

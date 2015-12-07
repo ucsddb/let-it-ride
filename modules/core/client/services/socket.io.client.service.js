@@ -10,11 +10,13 @@
 
     function Socket(Authentication, $state, $timeout) {
         // Connect to the Socket.io server only when authenticated
-        if(Authentication.user) {
-            this.socket = io();
-        } else {
-            $state.go('home');
-        }
+        this.connect = function() {
+            if(Authentication.user) {
+                this.socket = io();
+            } else {
+                $state.go('home');
+            }
+        };
 
         // Wrap the Socket.io 'on' method
         this.on = function(eventName, callback) {
