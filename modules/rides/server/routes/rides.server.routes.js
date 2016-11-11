@@ -7,4 +7,7 @@ module.exports = function(app) {
     // Rides collection Routes
     app.route('/api/rides').all(ridesPolicy.isAllowed)
         .post(rides.generate);
+
+    app.route('/api/rides/test')
+        .get(rides.test);
 };

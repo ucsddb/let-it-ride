@@ -7,24 +7,8 @@
         .controller('RidesController', RidesController)
         .controller('EditModalInstanceCtrl', EditModalInstanceCtrl);
 
-    RidesController.$inject = ['$scope', '$location', 'Rides', 'Locations', 'Members', 'LocationUtilProvider', '$http', '$modal', 'uiGridConstants', '_'];
+    RidesController.$inject = ['$scope', '$location', 'Rides', 'Locations', 'Members', 'LocationUtilProvider', '$http', '$modal', 'uiGridConstants', '_', 'EventSource'];
     EditModalInstanceCtrl.$inject = ['$scope', '$modalInstance', '$http'];
-
-    function refreshAddresses($scope, $http) {
-        return function(address) {
-            var params = {
-                address: address,
-                sensor: false
-            };
-            return $http.get(
-                'https://maps.googleapis.com/maps/api/geocode/json', {
-                    params: params
-                }
-            ).then(function(response) {
-                $scope.addresses = response.data.results;
-            });
-        };
-    }
 
     function EditModalInstanceCtrl($scope, $modalInstance, $http) {
         $scope.overrides = {
@@ -41,37 +25,7 @@
         $scope.refreshAddresses = refreshAddresses($scope, $http);
     }
 
-    function RidesController($scope, $location, Rides, Locations, Members, LocationUtilProvider, $http, $modal, uiGridConstants, _) {
-        $scope.editSelected = function() {
-            var modalInstance = $modal.open({
-                animation: true,
-                templateUrl: 'myModalContent.html',
-                controller: 'EditModalInstanceCtrl'
-            });
-
-            modalInstance.result.then(function(overrides) {
-                $scope.gridApi.selection.getSelectedRows().forEach(function(row) {
-                    if(overrides.pickup.selected) {
-                        row.pickupLocation = {
-                            address: overrides.pickup.selected.formatted_address,
-                            location: {
-                                coordinates: [overrides.pickup.selected.geometry.location.lng, overrides.pickup.selected.geometry.location.lat]
-                            }
-                        };
-                    }
-                    if(overrides.dropoff.selected) {
-                        row.dropoffLocation = {
-                            address: overrides.dropoff.selected.formatted_address,
-                            location: {
-                                coordinates: [overrides.dropoff.selected.geometry.location.lng, overrides.dropoff.selected.geometry.location.lat]
-                            }
-                        };
-                    }
-                });
-            }, function() {
-                console.log('Modal dismissed at: ' + new Date());
-            });
-        };
+    function RidesController($scope, $location, Rides, Locations, Members, LocationUtilProvider, $http, $modal, uiGridConstants, _, EventSource) {
         $scope.gridOptions = {
             enableFiltering: true,
             showColumnFooter: true,
@@ -140,8 +94,52 @@
             $scope.gridOptions.data = _.difference($scope.gridOptions.data, $scope.gridApi.selection.getSelectedRows());
         };
 
+        $scope.editSelected = function() {
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'myModalContent.html',
+                controller: 'EditModalInstanceCtrl'
+            });
+
+            modalInstance.result.then(function(overrides) {
+                $scope.gridApi.selection.getSelectedRows().forEach(function(row) {
+                    if(overrides.pickup.selected) {
+                        row.pickupLocation = {
+                            address: overrides.pickup.selected.formatted_address,
+                            location: {
+                                coordinates: [overrides.pickup.selected.geometry.location.lng, overrides.pickup.selected.geometry.location.lat]
+                            }
+                        };
+                    }
+                    if(overrides.dropoff.selected) {
+                        row.dropoffLocation = {
+                            address: overrides.dropoff.selected.formatted_address,
+                            location: {
+                                coordinates: [overrides.dropoff.selected.geometry.location.lng, overrides.dropoff.selected.geometry.location.lat]
+                            }
+                        };
+                    }
+                });
+            }, function() {
+                console.log('Modal dismissed at: ' + new Date());
+            });
+        };
+
         $scope.address = {};
         $scope.refreshAddresses = refreshAddresses($scope, $http);
+
+        var source = new EventSource('/api/rides/test');
+        source.addEventListener('message', function(e) {
+            var result = JSON.parse(e.data);
+            if(result.error) {
+                $scope.error = result.error;
+            } else {
+                if(result.id.indexOf('to'))
+                    $scope.toResults = result.data.assignments;
+                else
+                    $scope.fromResults = result.data.assignments;
+            }
+        }, false);
 
         // Create new Rides
         $scope.create = function() {
@@ -155,14 +153,15 @@
             var dataForTo = massageData($scope.gridOptions.data, DIRECTION.TO),
                 dataForFrom = massageData($scope.gridOptions.data, DIRECTION.FROM);
 
+            var timestamp = new Date().getTime().toString();
             // Create new Ride object
             var ride1 = new Rides({
                 people: dataForTo,
-                destination: $scope.address.selected
+                id: 'to_' + timestamp
             });
             var ride2 = new Rides({
                 people: dataForFrom,
-                destination: $scope.address.selected
+                id: 'from_' + timestamp
             });
             ride1.$save().then(function(response) {
                 var solutions = _.get(response, 'problem.solutions.solution');
@@ -178,20 +177,20 @@
             }, function(errorResponse) {
                 $scope.error = 'To event: ' + errorResponse.data.message;
             });
-            ride2.$save().then(function(response) {
-                var solutions = _.get(response, 'problem.solutions.solution');
-                var routes = _.get(_.min(solutions, function(sol) {
-                    return sol.cost;
-                }), 'routes.route', []);
-                $scope.fromResults = _.map(routes, function(r) {
-                    return {
-                        driver: r.vehicleId,
-                        passengers: _(r.act).pluck('shipmentId').uniq().value()
-                    };
-                });
-            }, function(errorResponse) {
-                $scope.error = 'From event: ' + errorResponse.data.message;
-            });
+            // ride2.$save().then(function(response) {
+            //     var solutions = _.get(response, 'problem.solutions.solution');
+            //     var routes = _.get(_.min(solutions, function(sol) {
+            //         return sol.cost;
+            //     }), 'routes.route', []);
+            //     $scope.fromResults = _.map(routes, function(r) {
+            //         return {
+            //             driver: r.vehicleId,
+            //             passengers: _(r.act).pluck('shipmentId').uniq().value()
+            //         };
+            //     });
+            // }, function(errorResponse) {
+            //     $scope.error = 'From event: ' + errorResponse.data.message;
+            // });
         };
 
         function massageData(people, direction) {
@@ -221,6 +220,22 @@
             });
             return people;
         }
+    }
+
+    function refreshAddresses($scope, $http) {
+        return function(address) {
+            var params = {
+                address: address,
+                sensor: false
+            };
+            return $http.get(
+                'https://maps.googleapis.com/maps/api/geocode/json', {
+                    params: params
+                }
+            ).then(function(response) {
+                $scope.addresses = response.data.results;
+            });
+        };
     }
 
     var DIRECTION = {
