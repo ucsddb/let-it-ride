@@ -14,7 +14,8 @@
             title: 'Locations',
             state: 'locations',
             roles: ['admin'],
-            type: 'dropdown'
+            type: 'dropdown',
+            isPublic: false
         });
 
         // Add the dropdown list item

@@ -8,18 +8,18 @@
         </button>
         <a data-ui-sref="home" class="navbar-brand">let-it-ride</a>
     </div>
-    <nav class="collapse navbar-collapse" collapse="!header.isCollapsed" role="navigation">
+    <nav class="collapse navbar-collapse" uib-collapse="!header.isCollapsed" role="navigation">
         <ul class="nav navbar-nav" data-ng-if="header.menu.shouldRender(header.authentication.user);">
-            <li data-ng-repeat="item in header.menu.items | orderBy: 'position'" 
-                data-ng-if="item.shouldRender(header.authentication.user);" 
-                ng-switch="item.type" data-ng-class="{active: header.$state.includes(item.state)}" 
-                class="{{item.class}}" dropdown="item.type === 'dropdown'">
-                <a ng-switch-when="dropdown" class="dropdown-toggle" dropdown-toggle>
+            <li data-ng-repeat="item in header.menu.items | orderBy: 'position'"
+                data-ng-if="item.shouldRender(header.authentication.user);"
+                ng-switch="item.type" data-ng-class="{active: header.$state.includes(item.state)}"
+                class="{{item.class}}" uib-dropdown="item.type === 'dropdown'">
+                <a ng-switch-when="dropdown" class="dropdown-toggle" uib-dropdown-toggle>
                     <span data-ng-bind="item.title"></span>
                     <b class="caret"></b>
                 </a>
                 <ul ng-switch-when="dropdown" class="dropdown-menu">
-                    <li data-ng-repeat="subitem in item.items | orderBy: 'position'" 
+                    <li data-ng-repeat="subitem in item.items | orderBy: 'position'"
                         data-ng-if="subitem.shouldRender(header.authentication.user);" data-ui-sref-active="active">
                         <a data-ui-sref="{{subitem.state}}" data-ng-bind="subitem.title"></a>
                     </li>
@@ -37,9 +37,9 @@
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right" data-ng-show="header.authentication.user">
-            <li class="dropdown" dropdown>
-                <a href="#" class="dropdown-toggle user-header-dropdown-toggle" data-toggle="dropdown" dropdown-toggle>
-                    <img data-ng-src="{{header.authentication.user.profileImageURL}}" 
+            <li class="dropdown" uib-dropdown>
+                <a href="#" class="dropdown-toggle user-header-dropdown-toggle" data-toggle="dropdown" uib-dropdown-toggle>
+                    <img data-ng-src="{{header.authentication.user.profileImageURL}}"
                         alt="{{header.authentication.user.displayName}}" class="header-profile-image"/>
                     <span data-ng-bind="header.authentication.user.displayName"></span> <b class="caret"></b>
                 </a>
