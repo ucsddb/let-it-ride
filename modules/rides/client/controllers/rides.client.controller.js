@@ -7,8 +7,8 @@
         .controller('RidesController', RidesController)
         .controller('EditModalInstanceCtrl', EditModalInstanceCtrl);
 
-    RidesController.$inject = ['$scope', '$location', 'Rides', 'Locations', 'Members', 'LocationUtilProvider', '$http', '$modal', 'uiGridConstants', '_', 'Socket'];
-    EditModalInstanceCtrl.$inject = ['$scope', '$modalInstance', '$http'];
+    RidesController.$inject = ['$scope', '$location', 'Rides', 'Locations', 'Members', 'LocationUtilProvider', '$http', '$uibModal', 'uiGridConstants', '_', 'Socket'];
+    EditModalInstanceCtrl.$inject = ['$scope', '$uibModalInstance', '$http'];
 
     function refreshAddresses($scope, $http) {
         return function(address) {
@@ -26,24 +26,24 @@
         };
     }
 
-    function EditModalInstanceCtrl($scope, $modalInstance, $http) {
+    function EditModalInstanceCtrl($scope, $uibModalInstance, $http) {
         $scope.overrides = {
             pickup: {},
             dropoff: {},
         };
         $scope.ok = function() {
-            $modalInstance.close($scope.overrides);
+            $uibModalInstance.close($scope.overrides);
         };
 
         $scope.cancel = function() {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
         };
         $scope.refreshAddresses = refreshAddresses($scope, $http);
     }
 
-    function RidesController($scope, $location, Rides, Locations, Members, LocationUtilProvider, $http, $modal, uiGridConstants, _, Socket) {
+    function RidesController($scope, $location, Rides, Locations, Members, LocationUtilProvider, $http, $uibModal, uiGridConstants, _, Socket) {
         $scope.editSelected = function() {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 animation: true,
                 templateUrl: 'myModalContent.html',
                 controller: 'EditModalInstanceCtrl'
@@ -198,15 +198,6 @@
             var dataForTo = massageData($scope.gridOptions.data, DIRECTION.TO),
                 dataForFrom = massageData($scope.gridOptions.data, DIRECTION.FROM);
 
-            // Create new Ride object
-            // var ride1 = new Rides({
-            //     people: dataForTo,
-            //     destination: $scope.address.selected
-            // });
-            // var ride2 = new Rides({
-            //     people: dataForFrom,
-            //     destination: $scope.address.selected
-            // });
             Socket.emit('rideMessage', {
                 people: dataForTo,
                 destination: $scope.address.selected,
@@ -217,34 +208,6 @@
                 destination: $scope.address.selected,
                 id: 'from'
             });
-            // ride1.$save().then(function(response) {
-            //     var solutions = _.get(response, 'problem.solutions.solution');
-            //     var routes = _.get(_.min(solutions, function(sol) {
-            //         return sol.cost;
-            //     }), 'routes.route', []);
-            //     $scope.toResults = _.map(routes, function(r) {
-            //         return {
-            //             driver: r.vehicleId,
-            //             passengers: _(r.act).pluck('shipmentId').uniq().value()
-            //         };
-            //     });
-            // }, function(errorResponse) {
-            //     $scope.error = 'To event: ' + errorResponse.data.message;
-            // });
-            // ride2.$save().then(function(response) {
-            //     var solutions = _.get(response, 'problem.solutions.solution');
-            //     var routes = _.get(_.min(solutions, function(sol) {
-            //         return sol.cost;
-            //     }), 'routes.route', []);
-            //     $scope.fromResults = _.map(routes, function(r) {
-            //         return {
-            //             driver: r.vehicleId,
-            //             passengers: _(r.act).pluck('shipmentId').uniq().value()
-            //         };
-            //     });
-            // }, function(errorResponse) {
-            //     $scope.error = 'From event: ' + errorResponse.data.message;
-            // });
         };
 
         function massageData(people, direction) {
