@@ -9,4 +9,4 @@ deploy:
   provider: heroku
   on: master
   api_key:
-    secure: I8nAAkfVgdVmC7OLxGM5c3RvheM7TpDEOPymrl1uiE+j6VtY2TRAAdQrL3yl8eNctkIterAWYIdMfPHiekrapvDSLiJiaI2EL3XSNItTnVKL8717hjQ4heSyhNrj+8LShC0Lt0nMNfHSHrTAPcE9ZafuobZAL1q9KUPkyaeiM5Y=
+    secure: PPQUsaHSV8o852asNUtN+JORupOwclmMe+ACoJO4jEUIOL6RFcpuKY1+Rb5qoZM2CE49DICbiFE0SIlMcD3bd/o1zIlQUD9mZeBKl7lqTiionuUa8AeoU0BskgNMLcnAOx3XgVO2TGTjM7twL7wdDGpP8aGdzIaR/Ga68M2es/o=
