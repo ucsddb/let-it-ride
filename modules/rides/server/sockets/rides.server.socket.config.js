@@ -39,11 +39,11 @@ module.exports = function(io, socket) {
                 if(msg.indexOf('$Counter - iterations') > -1) {
                     var its = msg.match(/Counter - iterations\s+(\d+)/);
                     if(its !== null && its.length > 1) {
-                        var prog = Number(its[its.length - 1]),
+                        var prog = Number(its[1]),
                             total = Number(process.env.MAX_ITERATIONS);
                         io.emit('rideMessage', {
                             id: message.id,
-                            progress: prog / total
+                            progress: (prog / total).toFixed(2)
                         });
                     }
                 }
