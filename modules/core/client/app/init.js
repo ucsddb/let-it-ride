@@ -30,7 +30,8 @@
     angular
         .module(ApplicationConfiguration.applicationModuleName)
         .constant('_', window._)
-        .constant('Papa', window.Papa);
+        .constant('Papa', window.Papa)
+        .constant('EventSource', window.EventSource);
 
     //Then define the init function for starting up the application
     angular.element(document).ready(function() {

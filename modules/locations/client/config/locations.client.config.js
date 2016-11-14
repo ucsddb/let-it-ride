@@ -14,19 +14,22 @@
             title: 'Locations',
             state: 'locations',
             roles: ['admin'],
-            type: 'dropdown'
+            type: 'dropdown',
+            isPublic: false
         });
 
         // Add the dropdown list item
         Menus.addSubMenuItem('topbar', 'locations', {
             title: 'List Locations',
-            state: 'locations.list'
+            state: 'locations.list',
+            roles: ['admin']
         });
 
         // Add the dropdown create item
         Menus.addSubMenuItem('topbar', 'locations', {
             title: 'Create Locations',
-            state: 'locations.create'
+            state: 'locations.create',
+            roles: ['admin']
         });
     }
 })();

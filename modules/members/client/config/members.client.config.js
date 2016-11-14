@@ -13,8 +13,9 @@
         Menus.addMenuItem('topbar', {
             title: 'Members',
             state: 'members',
-            roles: ['*'],
-            type: 'dropdown'
+            roles: ['user'],
+            type: 'dropdown',
+            isPublic: false
         });
 
         // Add the dropdown list item
@@ -26,7 +27,8 @@
         // Add the dropdown create item
         Menus.addSubMenuItem('topbar', 'members', {
             title: 'Create Members',
-            state: 'members.create'
+            state: 'members.create',
+            roles: ['admin']
         });
     }
 })();

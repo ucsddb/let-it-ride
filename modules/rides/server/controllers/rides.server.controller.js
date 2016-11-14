@@ -30,11 +30,11 @@ exports.generate = function(req, res) {
             str += util.format('%s,%s,%s,%s,%s,%s,%s\n', person.name, startLong, startLat, endLong, endLat, person.driver, person.capacity);
         });
         fs.writeFileSync(inputFile, str);
-        var child = spawn('/usr/bin/java', ['-jar', process.cwd() + '/scripts/genRides.jar', timestamp], {
+        var child = spawn('/usr/bin/java', ['-jar', '-Xmx' + process.env.RIDE_GEN_HEAP_SIZE + 'm', process.cwd() + '/scripts/genRides.jar', timestamp], {
             cwd: './scripts',
             stdio: 'inherit'
         });
-
+        console.log(process.env.RIDE_GEN_HEAP_SIZE);
         child.on('close', function(code) {
             if(code !== 0) {
                 console.log('child exited with code: ' + code);

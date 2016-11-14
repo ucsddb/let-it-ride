@@ -10,10 +10,10 @@
             <i class="glyphicon glyphicon-trash"></i>
         </a>
     </div>
-    <div>
+    <div data-ng-show="(authentication.user)">
         Pickup: <span data-ng-bind="member.pickupLocation.address"></span>
     </div>
-    <div>
+    <div data-ng-show="(authentication.user)">
         Dropoff: <span data-ng-bind="member.dropoffLocation.address"></span>
     </div>
     <div>

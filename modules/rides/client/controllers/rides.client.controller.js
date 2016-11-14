@@ -7,8 +7,8 @@
         .controller('RidesController', RidesController)
         .controller('EditModalInstanceCtrl', EditModalInstanceCtrl);
 
-    RidesController.$inject = ['$scope', '$location', 'Rides', 'Locations', 'Members', 'LocationUtilProvider', '$http', '$modal', 'uiGridConstants', '_'];
-    EditModalInstanceCtrl.$inject = ['$scope', '$modalInstance', '$http'];
+    RidesController.$inject = ['$scope', '$location', 'Rides', 'Locations', 'Members', 'LocationUtilProvider', '$http', '$uibModal', 'uiGridConstants', '_', 'Socket'];
+    EditModalInstanceCtrl.$inject = ['$scope', '$uibModalInstance', '$http'];
 
     function refreshAddresses($scope, $http) {
         return function(address) {
@@ -26,24 +26,24 @@
         };
     }
 
-    function EditModalInstanceCtrl($scope, $modalInstance, $http) {
+    function EditModalInstanceCtrl($scope, $uibModalInstance, $http) {
         $scope.overrides = {
             pickup: {},
             dropoff: {},
         };
         $scope.ok = function() {
-            $modalInstance.close($scope.overrides);
+            $uibModalInstance.close($scope.overrides);
         };
 
         $scope.cancel = function() {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
         };
         $scope.refreshAddresses = refreshAddresses($scope, $http);
     }
 
-    function RidesController($scope, $location, Rides, Locations, Members, LocationUtilProvider, $http, $modal, uiGridConstants, _) {
+    function RidesController($scope, $location, Rides, Locations, Members, LocationUtilProvider, $http, $uibModal, uiGridConstants, _, Socket) {
         $scope.editSelected = function() {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 animation: true,
                 templateUrl: 'myModalContent.html',
                 controller: 'EditModalInstanceCtrl'
@@ -142,7 +142,48 @@
 
         $scope.address = {};
         $scope.refreshAddresses = refreshAddresses($scope, $http);
+        $scope.progress = {
+            to: 0,
+            from: 0
+        };
 
+        if(!Socket.socket) {
+            Socket.connect();
+        }
+
+        Socket.on('rideMessage', function(message) {
+            if(!message) return;
+            if(message.progress) {
+                $scope.progress[message.id] = message.progress * 100;
+            } else if(message.result) {
+                var solutions = _.get(message.result, 'problem.solutions.solution');
+                var routes = _.get(_.min(solutions, function(sol) {
+                    return sol.cost;
+                }), 'routes.route', []);
+                if(message.id === 'to') {
+                    $scope.toResults = _.map(routes, function(r) {
+                        return {
+                            driver: r.vehicleId,
+                            passengers: _(r.act).pluck('shipmentId').uniq().value()
+                        };
+                    });
+                } else if(message.id === 'from') {
+                    $scope.fromResults = _.map(routes, function(r) {
+                        return {
+                            driver: r.vehicleId,
+                            passengers: _(r.act).pluck('shipmentId').uniq().value()
+                        };
+                    });
+                }
+            } else if(message.message) {
+                $scope.error = message.message;
+            }
+        });
+
+        var DIRECTION = {
+            TO: 0,
+            FROM: 1
+        };
         // Create new Rides
         $scope.create = function() {
             $scope.error = '';
@@ -155,42 +196,15 @@
             var dataForTo = massageData($scope.gridOptions.data, DIRECTION.TO),
                 dataForFrom = massageData($scope.gridOptions.data, DIRECTION.FROM);
 
-            // Create new Ride object
-            var ride1 = new Rides({
+            Socket.emit('rideMessage', {
                 people: dataForTo,
-                destination: $scope.address.selected
+                destination: $scope.address.selected,
+                id: 'to'
             });
-            var ride2 = new Rides({
+            Socket.emit('rideMessage', {
                 people: dataForFrom,
-                destination: $scope.address.selected
-            });
-            ride1.$save().then(function(response) {
-                var solutions = _.get(response, 'problem.solutions.solution');
-                var routes = _.get(_.min(solutions, function(sol) {
-                    return sol.cost;
-                }), 'routes.route', []);
-                $scope.toResults = _.map(routes, function(r) {
-                    return {
-                        driver: r.vehicleId,
-                        passengers: _(r.act).pluck('shipmentId').uniq().value()
-                    };
-                });
-            }, function(errorResponse) {
-                $scope.error = 'To event: ' + errorResponse.data.message;
-            });
-            ride2.$save().then(function(response) {
-                var solutions = _.get(response, 'problem.solutions.solution');
-                var routes = _.get(_.min(solutions, function(sol) {
-                    return sol.cost;
-                }), 'routes.route', []);
-                $scope.fromResults = _.map(routes, function(r) {
-                    return {
-                        driver: r.vehicleId,
-                        passengers: _(r.act).pluck('shipmentId').uniq().value()
-                    };
-                });
-            }, function(errorResponse) {
-                $scope.error = 'From event: ' + errorResponse.data.message;
+                destination: $scope.address.selected,
+                id: 'from'
             });
         };
 
@@ -221,10 +235,9 @@
             });
             return people;
         }
-    }
 
-    var DIRECTION = {
-        TO: 0,
-        FROM: 1
-    };
+        $scope.$on('$destroy', function() {
+            Socket.removeListener('rideMessage');
+        });
+    }
 })();

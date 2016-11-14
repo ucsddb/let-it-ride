@@ -14,6 +14,7 @@
             title: 'Rides',
             state: 'rides.generate',
             roles: ['*'],
+            isPublic: false
         });
     }
 })();
