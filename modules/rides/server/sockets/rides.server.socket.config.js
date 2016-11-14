@@ -1,5 +1,6 @@
 'use strict';
 
+<<<<<<< HEAD
 var _ = require('lodash'),
     path = require('path'),
     fs = require('fs'),
